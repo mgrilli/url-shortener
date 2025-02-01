@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: url-shortener
+  datasource:
+    url: jdbc:postgresql://localhost:5432/urlshortener
+    username: admin
+    password: admin
