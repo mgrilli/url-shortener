@@ -1,5 +1,6 @@
 package com.lab.url_shortener.controller;
 
+import com.lab.url_shortener.dto.ShortenedUrlStatisticsDTO;
 import com.lab.url_shortener.dto.UrlRequestDTO;
 import com.lab.url_shortener.model.ShortenedUrl;
 import com.lab.url_shortener.service.UrlShortenerService;
@@ -39,5 +40,11 @@ public class ShortenedUrlController {
     public ResponseEntity<?> deleteShortenedUrl(@PathVariable String shortCode) {
         this.urlShortenerService.deleteShortenedUrlByShortCode(shortCode);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @GetMapping("/{shortCode}/stats")
+    public ResponseEntity<ShortenedUrlStatisticsDTO> retrieveStatistics(@PathVariable String shortCode) {
+        var result = this.urlShortenerService.retrieveShortenedUrlStatistics(shortCode);
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 }

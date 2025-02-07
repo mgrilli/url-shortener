@@ -1,9 +1,11 @@
 package com.lab.url_shortener.service;
 
+import com.lab.url_shortener.dto.ShortenedUrlStatisticsDTO;
 import com.lab.url_shortener.dto.UrlRequestDTO;
 import com.lab.url_shortener.exception.InvalidUrlException;
 import com.lab.url_shortener.exception.ShortCodeNotFoundException;
 import com.lab.url_shortener.model.ShortenedUrl;
+import com.lab.url_shortener.repository.ShortenedUrlAccessRepository;
 import com.lab.url_shortener.repository.ShortenedUrlRepository;
 import org.springframework.stereotype.Service;
 import java.net.URI;
@@ -16,9 +18,11 @@ import java.util.Random;
 public class UrlShortenerService {
 
     private final ShortenedUrlRepository repository;
+    private final ShortenedUrlAccessRepository statsRepository;
 
-    public UrlShortenerService(ShortenedUrlRepository repository) {
+    public UrlShortenerService(ShortenedUrlRepository repository, ShortenedUrlAccessRepository statsRepository) {
         this.repository = repository;
+        this.statsRepository = statsRepository;
     }
 
     public void createShortenedUrl(String url) {
@@ -32,7 +36,21 @@ public class UrlShortenerService {
     }
 
     public ShortenedUrl getShortenedUrlByShortCode(String shortCode) {
-        return this.repository.findByShortCode(shortCode).orElseThrow(() -> new ShortCodeNotFoundException("Short code not found!"));
+        var shortUrl = this.repository.findByShortCode(shortCode);
+        if (shortUrl.isPresent()) {
+            Integer id = shortUrl.get().id();
+            var stat = this.statsRepository.findById(id);
+            if (stat.isPresent()) {
+                Integer counter = stat.get().accessCount();
+                counter++;
+                this.statsRepository.updateStatistics(id, counter);
+            } else {
+                this.statsRepository.insertStatistics(id, 1);
+            }
+            return shortUrl.get();
+        } else {
+            throw new ShortCodeNotFoundException(shortCode);
+        }
     }
 
     public ShortenedUrl updateUrlByShortCode(String shortCode, UrlRequestDTO url) {
@@ -46,6 +64,15 @@ public class UrlShortenerService {
             return shortenedUrl;
         } else {
             throw new InvalidUrlException("Invalid URL");
+        }
+    }
+
+    public ShortenedUrlStatisticsDTO retrieveShortenedUrlStatistics(String shortCode) {
+        var statistics = this.statsRepository.getStatistics(shortCode);
+        if (statistics.isPresent()) {
+            return statistics.get();
+        } else {
+            throw new ShortCodeNotFoundException("Short code not found!");
         }
     }
 

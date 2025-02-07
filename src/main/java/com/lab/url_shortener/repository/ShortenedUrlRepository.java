@@ -51,4 +51,5 @@ public class ShortenedUrlRepository {
                 .param("shortCode", shortCode)
                 .update();
     }
+
 }
