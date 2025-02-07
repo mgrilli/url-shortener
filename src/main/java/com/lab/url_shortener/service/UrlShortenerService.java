@@ -28,8 +28,7 @@ public class UrlShortenerService {
     public void createShortenedUrl(String url) {
         if (isValidUrl(url)) {
             String shortCode = shortCodeGenerator();
-            LocalDateTime createdAt = LocalDateTime.now();
-            this.repository.create(url, shortCode, createdAt);
+            this.repository.create(url, shortCode);
         } else {
             throw new InvalidUrlException("Invalid URL");
         }

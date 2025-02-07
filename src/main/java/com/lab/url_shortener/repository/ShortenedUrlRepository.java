@@ -16,12 +16,11 @@ public class ShortenedUrlRepository {
         this.jdbcClient = jdbcClient;
     }
 
-    public Integer create(String url, String shortCode, LocalDateTime createdAt) {
+    public Integer create(String url, String shortCode) {
         return jdbcClient
-                .sql("INSERT INTO SHORTENED_URL (url, short_code, created_at) VALUES (:url, :shortCode, :createdAt)")
+                .sql("INSERT INTO SHORTENED_URL (url, short_code) VALUES (:url, :shortCode)")
                 .param("url", url)
                 .param("shortCode", shortCode)
-                .param("createdAt", createdAt)
                 .update();
     }
 
