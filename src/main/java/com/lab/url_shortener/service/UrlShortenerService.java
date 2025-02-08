@@ -48,7 +48,7 @@ public class UrlShortenerService {
             }
             return shortUrl.get();
         } else {
-            throw new ShortCodeNotFoundException(shortCode);
+            throw new ShortCodeNotFoundException("Short code not found!");
         }
     }
 
