@@ -26,8 +26,8 @@ public class ShortenedUrlAccessRepository {
                            su.updated_at,
                            sa.access_count
                     FROM
-                        SHORTENED_URL su
-                    JOIN SHORTENED_URL_ACCESS sa
+                        shortened_url su
+                    JOIN shortened_url_access sa
                     ON su.id = sa.id
                     WHERE su.short_code = :shortCode
                 """)
@@ -50,7 +50,7 @@ public class ShortenedUrlAccessRepository {
     public Integer updateStatistics(Integer id, Integer accessCount) {
         return jdbcClient
                 .sql("""
-                    UPDATE SHORTENED_URL_ACCESS SET ACCESS_COUNT = :accessCount
+                    UPDATE shortened_url_access SET access_count = :accessCount
                     WHERE id = :id
                 """)
                 .param("accessCount", accessCount)
@@ -62,10 +62,8 @@ public class ShortenedUrlAccessRepository {
         return jdbcClient
                 .sql("""
                     SELECT id, access_count
-                    FROM
-                    SHORTENED_URL_ACCESS
-                    WHERE
-                    ID = :id
+                    FROM shortened_url_access
+                    WHERE id = :id
                 """)
                 .param("id", id)
                 .query(ShortenedUrlAccess.class)

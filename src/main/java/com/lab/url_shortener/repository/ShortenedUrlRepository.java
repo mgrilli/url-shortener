@@ -30,9 +30,11 @@ public class ShortenedUrlRepository {
 
     public Optional<ShortenedUrl> findByShortCode(String shortCode) {
         return jdbcClient
-                .sql("SELECT id, url, short_code, created_at, updated_at " +
-                     "FROM SHORTENED_URL " +
-                     "WHERE short_code = :shortCode")
+                .sql("""
+                    SELECT id, url, short_code, created_at, updated_at
+                    FROM shortened_url
+                    WHERE short_code = :shortCode
+                """)
                 .param("shortCode", shortCode)
                 .query(ShortenedUrl.class)
                 .optional();
@@ -40,8 +42,10 @@ public class ShortenedUrlRepository {
 
     public Integer updateUrlByShortCode(String shortCode, String url, LocalDateTime updatedAt) {
         return jdbcClient
-                .sql("UPDATE SHORTENED_URL SET url = :url, updated_at = :updatedAt" +
-                       " WHERE short_code = :shortCode")
+                .sql("""
+                    UPDATE shortened_url SET url = :url, updated_at = :updatedAt
+                    WHERE short_code = :shortCode
+                """)
                 .param("url", url)
                 .param("updatedAt", updatedAt)
                 .param("shortCode", shortCode)
@@ -50,7 +54,10 @@ public class ShortenedUrlRepository {
 
     public Integer deleteByShortCode(String shortCode) {
         return jdbcClient
-                .sql("DELETE FROM SHORTENED_URL WHERE short_code = :shortCode")
+                .sql("""
+                    DELETE FROM shortened_url 
+                    WHERE short_code = :shortCode
+                """)
                 .param("shortCode", shortCode)
                 .update();
     }
