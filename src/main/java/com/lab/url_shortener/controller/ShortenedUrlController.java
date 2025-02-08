@@ -19,9 +19,9 @@ public class ShortenedUrlController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createShortenedUrl(@RequestBody UrlRequestDTO url) {
-        this.urlShortenerService.createShortenedUrl(url.url());
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    public ResponseEntity<ShortenedUrl> createShortenedUrl(@RequestBody UrlRequestDTO url) {
+        var result = this.urlShortenerService.createShortenedUrl(url.url());
+        return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 
     @GetMapping("/{shortCode}")

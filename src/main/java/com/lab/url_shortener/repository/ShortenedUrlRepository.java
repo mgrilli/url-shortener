@@ -16,12 +16,16 @@ public class ShortenedUrlRepository {
         this.jdbcClient = jdbcClient;
     }
 
-    public Integer create(String url, String shortCode) {
+    public ShortenedUrl create(String url, String shortCode) {
         return jdbcClient
-                .sql("INSERT INTO SHORTENED_URL (url, short_code) VALUES (:url, :shortCode)")
+                .sql("""
+                     INSERT INTO shortened_url (url, short_code) VALUES(:url, :shortCode)
+                     RETURNING id, url, short_code, created_at, updated_at
+                 """)
                 .param("url", url)
                 .param("shortCode", shortCode)
-                .update();
+                .query(ShortenedUrl.class)
+                .single();
     }
 
     public Optional<ShortenedUrl> findByShortCode(String shortCode) {

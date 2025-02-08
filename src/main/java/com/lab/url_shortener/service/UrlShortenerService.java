@@ -25,10 +25,10 @@ public class UrlShortenerService {
         this.statsRepository = statsRepository;
     }
 
-    public void createShortenedUrl(String url) {
+    public ShortenedUrl createShortenedUrl(String url) {
         if (isValidUrl(url)) {
             String shortCode = shortCodeGenerator();
-            this.repository.create(url, shortCode);
+            return this.repository.create(url, shortCode);
         } else {
             throw new InvalidUrlException("Invalid URL");
         }
