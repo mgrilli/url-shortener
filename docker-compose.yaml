@@ -1,0 +1,22 @@
+services:
+  url-shortener:
+    image: url-shortener
+    container_name: url-shortener
+    environment:
+      database_url: jdbc:postgresql://db:5432/urlshortener
+      database_username: admin
+      database_password: admin
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres
+    container_name: db
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: urlshortener
+    ports:
+      - "5432:5432"
